@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t choton654/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true choton654/react-test npm test
+
+after_success:
+  - docker build -t choton654/multi-client ./client
+  - docker build -t choton654/multi-nginx ./nginx
+  - docker build -t choton654/multi-server ./server
+  - docker build -t choton654/multi-worker ./worker
+  #  login to docker cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # push images to docker hub
+  - docker push choton654/multi-client
+  - docker push choton654/multi-nginx
+  - docker push choton654/multi-server
+  - docker push choton654/multi-worker
