@@ -20,3 +20,16 @@ after_success:
   - docker push choton654/multi-nginx
   - docker push choton654/multi-server
   - docker push choton654/multi-worker
+
+deploy:
+  edge: true
+  provider: elasticbeanstalk
+  region: ap-south-1
+  app: multi-docker
+  env: MultiDocker-env
+  bucket_name: elasticbeanstalk-ap-south-1-013225200604
+  bucket_path: docker_multi
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
